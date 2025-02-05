@@ -123,39 +123,7 @@ export function App() {
               </button>
             </div>
 
-            <div className="bg-gray-100 rounded-sm p-2 text-sm">
-              {diff.map((diffPart, index) => {
-                if (diffPart.added) {
-                  return (
-                    // biome-ignore lint/suspicious/noArrayIndexKey: This is a controlled list
-                    <span key={index} className="text-green-600 font-medium">
-                      {diffPart.value}
-                    </span>
-                  )
-                }
-
-                if (diffPart.removed) {
-                  return (
-                    <span
-                      // biome-ignore lint/suspicious/noArrayIndexKey: This is a controlled list
-                      key={index}
-                      className="text-red-600 line-through"
-                    >
-                      {diffPart.value}
-                    </span>
-                  )
-                }
-
-                return (
-                  <span
-                    // biome-ignore lint/suspicious/noArrayIndexKey: This is a controlled list
-                    key={index}
-                  >
-                    {diffPart.value}
-                  </span>
-                )
-              })}
-            </div>
+            <div className="bg-gray-100 rounded-sm p-2 text-sm">{response}</div>
           </div>
         )}
       </div>
