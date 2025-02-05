@@ -37,7 +37,7 @@ export function App() {
       const { textStream } = streamText({
         model: ollama('deepseek-r1:1.5b'),
         system:
-          'You are a grammar correction tool. Improve the grammar of input prompts without adding extra text, explanations, or formatting. Output only the corrected text with no quotation marks or additional commentary.',
+          "You are a grammar correction tool. You don't need to interpret the prompt. Improve the grammar of input prompts without adding extra text, explanations, or formatting. Output only the corrected text with no quotation marks or additional commentary.",
         prompt: data.prompt,
       })
 
