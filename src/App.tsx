@@ -4,6 +4,7 @@ import { createOllama } from 'ollama-ai-provider'
 import { type KeyboardEvent, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { type Change, diffWords } from 'diff'
+import { cn } from './utils'
 
 const ollama = createOllama({
   baseURL: '/api',
@@ -30,14 +31,19 @@ export function App() {
 
   async function handleFormSubmit(data: { prompt: string }) {
     try {
+      const AI_MODEL = import.meta.env.VITE_AI_MODEL
+
+      if (!AI_MODEL) {
+        return
+      }
+
       setResponse('')
       setDiff([])
       setResponseStatus('pending')
 
       const { textStream } = streamText({
-        model: ollama('deepseek-r1:1.5b'),
-        system:
-          "You are a grammar correction tool. You don't need to interpret the prompt. Improve the grammar of input prompts without adding extra text, explanations, or formatting. Output only the corrected text with no quotation marks or additional commentary.",
+        model: ollama(AI_MODEL),
+        system: import.meta.env.VITE_SYSTEM_PROMPT || '',
         prompt: data.prompt,
       })
 
@@ -74,6 +80,8 @@ export function App() {
       setCopyStatus('idle')
     }, 2000)
   }
+
+  console.log(diff)
 
   return (
     <div className="p-4">
@@ -123,7 +131,25 @@ export function App() {
               </button>
             </div>
 
-            <div className="bg-gray-100 rounded-sm p-2 text-sm">{response}</div>
+            <div
+              className={cn(
+                'bg-gray-100 rounded-sm p-2 text-sm',
+                responseStatus === 'error' && 'text-red-600',
+              )}
+            >
+              {diff.map((part, index) => (
+                <span
+                  // biome-ignore lint/suspicious/noArrayIndexKey: This is a controlled list
+                  key={index}
+                  className={cn(
+                    part.added && 'text-green-500 font-semibold',
+                    part.removed && 'text-red-500 line-through font-semibold',
+                  )}
+                >
+                  {part.value}
+                </span>
+              ))}
+            </div>
           </div>
         )}
       </div>
