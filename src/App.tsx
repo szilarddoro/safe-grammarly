@@ -47,10 +47,15 @@ export function App() {
         prompt: data.prompt,
       })
 
-      let thinking = true
+      let thinking = false
       let response = ''
 
       for await (const textPart of textStream) {
+        if (textPart === '<think>') {
+          thinking = true
+          continue
+        }
+
         if (textPart === '</think>') {
           thinking = false
           continue
@@ -80,8 +85,6 @@ export function App() {
       setCopyStatus('idle')
     }, 2000)
   }
-
-  console.log(diff)
 
   return (
     <div className="p-4">
